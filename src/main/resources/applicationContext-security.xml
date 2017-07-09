@@ -1,0 +1,96 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                    http://www.springframework.org/schema/security 
+                    http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+	<!-- <debug /> -->
+
+	<http pattern="/web-ws/public/**" security="none" />
+	<http pattern="/resources/**" security="none" />
+	<http pattern="/html/index.html" security="none" />
+	<http pattern="/html/login.html" security="none" />
+	<http pattern="/html/login_home.html" security="none" />
+	<http pattern="/html/common/header.html" security="none" />
+	<http pattern="/html/common/footer.html" security="none" />
+	<http pattern="/favicon.ico" security="none" />
+	<http pattern="/js/**" security="none" />
+	<http pattern="/img/**" security="none" />	
+	<http pattern="/web-ws/login/**" security="none" />
+	
+	<http use-expressions="true" auto-config="false" 
+		entry-point-ref="loginUrlAuthenticationEntryPoint">		
+		<intercept-url pattern="/web-ws/**" access="isAuthenticated()" />
+
+		<!-- <form-login/> -->
+		<http-basic />
+		<custom-filter position="FORM_LOGIN_FILTER" ref="userNamePasswordFilter" />
+		<custom-filter before="LAST" ref="contextFilter" />
+
+		<logout logout-success-url="/web-ws/login" logout-url="/web-ws/j_spring_security_logout" />
+	</http>
+	<!-- -->
+
+	<beans:bean id="loginUrlAuthenticationEntryPoint"
+		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:property name="loginFormUrl" value="/web-ws/login?" />
+	</beans:bean>
+
+	<authentication-manager>
+		<authentication-provider user-service-ref="customAuthenticationProvider">
+			<password-encoder hash="md5" >
+			</password-encoder>
+		</authentication-provider>
+	</authentication-manager>
+
+	<beans:bean id="customAuthenticationProvider" class="com.qsense.security.UserSecurityService">
+	</beans:bean>
+
+	<beans:bean id="daoAuthProvider"
+		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="customAuthenticationProvider" />
+		<beans:property name="passwordEncoder" ref="md5passwordEncoder" />
+	</beans:bean>
+	<beans:bean id="md5passwordEncoder"
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+
+	<beans:bean id="loginFailureHandler"
+		class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<beans:property name="defaultFailureUrl"
+			value="/web-ws/login?authentication_error=true" />
+	</beans:bean>
+
+	<beans:bean id="contextFilter" class="com.qsense.filters.ContextFilter" />
+
+
+	<beans:bean id="userNamePasswordFilter"
+		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<beans:property name="filterProcessesUrl" value="/web-ws/j_spring_security_check" />
+		<beans:property name="authenticationManager" ref="myuserAuthenticationManager" />
+		<beans:property name="authenticationFailureHandler"
+			ref="loginFailureHandler" />
+		<beans:property name="authenticationSuccessHandler"
+			ref="loginSuccessHandler" />
+	</beans:bean>
+
+	<beans:bean id="loginSuccessHandler"
+		class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+		<beans:property name="defaultTargetUrl" value="/web-ws/" />
+		<beans:property name="alwaysUseDefaultTargetUrl" value="true"/>
+	</beans:bean>
+
+	<beans:bean id="myuserAuthenticationManager"
+		class="org.springframework.security.authentication.ProviderManager">
+		<beans:property name="providers">
+			<beans:list>
+				<beans:ref local="daoAuthProvider" />
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+
+	<beans:bean id="rememberMeAuthenticationProvider"
+		class="org.springframework.security.authentication.RememberMeAuthenticationProvider">
+		<beans:property name="key" value="springRocks" />
+	</beans:bean>
+
+</beans:beans>   

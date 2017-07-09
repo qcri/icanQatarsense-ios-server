@@ -1,0 +1,32 @@
+<ivy-module version="2.0">
+	<info organisation="QSense" module="QSense" status="integration" />
+	<dependencies>		
+		<dependency org="org.apache.commons" name="commons-lang3" rev="3.3.2"/>		
+		<dependency org="org.springframework" name="spring-web" rev="4.0.6.RELEASE" />
+		<dependency org="org.springframework" name="spring-webmvc"	rev="4.0.6.RELEASE" />
+		<dependency org="org.springframework.security" name="spring-security-config" rev="3.2.4.RELEASE"/>
+		<dependency org="org.springframework.security" name="spring-security-web" rev="3.2.4.RELEASE" />
+		<dependency org="org.springframework.security" name="spring-security-core" rev="3.2.4.RELEASE" />
+		<dependency org="org.springframework.security" name="spring-security-taglibs" rev="3.2.4.RELEASE"/>   
+		<dependency org="org.springframework.security" name="spring-security-acl" rev="3.2.4.RELEASE"/>   		
+		<dependency org="org.hibernate" name="hibernate-core" rev="4.3.6.Final" />
+		<dependency org="org.hibernate" name="hibernate-entitymanager"	rev="4.3.6.Final" />
+		<dependency org="org.springframework" name="spring-aspects" rev="4.0.6.RELEASE" />		
+		<dependency org="org.aspectj" name="aspectjweaver" rev="1.8.1" />		
+		<dependency org="mysql" name="mysql-connector-java" rev="5.1.31"/>		 	
+		<dependency org="junit" name="junit" rev="4.11" />
+		<dependency org="org.springframework" name="spring-test" rev="4.0.6.RELEASE" />
+		<dependency org="commons-net" name="commons-net" rev="3.3"/>
+		<dependency org="com.jcraft" name="jsch" rev="0.1.51"/>      
+		<dependency org="com.googlecode.flyway" name="flyway-core" rev="2.3.1"/>
+		<dependency org="com.google.code.gson" name="gson" rev="2.2.4"/>
+		<dependency org="org.json" name="json" rev="20140107"/>				
+		<dependency org="commons-net" name="commons-net" rev="3.3"/>
+		<dependency org="net.sf.flexjson" name="flexjson" rev="2.1"/>
+		<dependency org="com.github.sps.mustache" name="mustache-spring-view" rev="1.0" />
+		<dependency org="joda-time" name="joda-time" rev="2.0"/>		
+		<dependency org="org.apache.commons" name="commons-dbcp2" rev="2.0.1"/>		
+		<dependency org="commons-codec" name="commons-codec" rev="1.10"/>
+						            
+	</dependencies>
+</ivy-module>

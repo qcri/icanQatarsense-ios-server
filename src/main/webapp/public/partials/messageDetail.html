@@ -1,0 +1,54 @@
+<div class="container">
+	<form role="form">
+		{{#if isView }}
+			<div class="form-group">
+				<a href="#message" class="back"> < back</a>
+			</div>
+		{{/if}}		
+		
+		{{#isView }}
+			<div class="form-group">
+				<label forName="title" class="control-label" > Title </label>
+				<input class="form-control" name="title" disabled="disabled" value="{{title}}">
+			</div>
+			<div class="form-group">
+				<label forName="content" class="control-label" > Content (max 1000)</label>
+				<textarea class="form-control" name="content" disabled="disabled">{{content}}</textarea>
+			</div>		
+			<div class="form-group">
+				<label forName="role" class="control-label" > Role </label>
+				<input class="form-control" name="role" disabled="disabled" value="{{role.name}}">
+			</div>
+			<div class="form-group">
+				<label forName="group" class="control-label" > Group </label>
+				<input class="form-control" name="group" disabled="disabled" value="{{group.name}}">
+			</div>	
+		{{/isView }}
+		{{#isCreate}}				
+			<div class="form-group">
+				<label forName="title" class="control-label" > Title </label>
+				<input class="form-control" name="title" ">
+			</div>
+			<div class="form-group">
+				<label forName="content" class="control-label" > Content (max 1000) </label>
+				<textarea class="form-control" name="content" ></textarea>
+			</div>
+			<div class="form-group">
+				<label forName="role" class="control-label" > Role </label>
+				<select class="form-control" name="role" id="role"></select>
+			</div>
+			<div class="form-group">
+				<label forName="group" class="control-label" > Group </label>
+				<select class="form-control" name="group"></select>
+			</div>	
+		{{/isCreate}}			
+		
+		{{#isCreate}}
+			<div class="form-group">
+				<button class="btn btn-primary save" type="submit"> Save </button>
+				<button class="btn btn-danger col-sm-offset-1 cancel"> Cancel </button>
+			</div>
+		{{/isCreate}}	
+		
+	</form>
+</div>

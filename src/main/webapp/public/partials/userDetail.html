@@ -1,0 +1,109 @@
+<div class="container">
+	<form role="form">
+		{{#if isView }}
+			<div class="form-group">
+				<a href="#user" class="back"> < back</a>
+			</div>
+		{{/if}}
+		{{#if isCreate }}
+			<div class="form-group">
+				<label forName="userName" class="control-label"  required> User Name </label>
+				<input class="form-control" name="userName">
+			</div>		
+		{{else}}
+			<div class="form-group">
+				<label forName="userName" class="control-label"  required> User Name </label>
+				<input class="form-control" name="userName" disabled="disabled" value="{{userName}}">
+			</div>
+		{{/if}}
+		
+		{{#isView }}
+			<div class="form-group">
+				<label forName="firstName" class="control-label" > First Name </label>
+				<input class="form-control" name="firstName" disabled="disabled" value="{{firstName}}">
+			</div>
+			<div class="form-group">
+				<label forName="lastName" class="control-label" > Last Name </label>
+				<input class="form-control" name="lastName" disabled="disabled" value="{{lastName}}">
+			</div>		
+			<div class="form-group">
+				<label forName="role" class="control-label" > Role </label>
+				<input class="form-control" name="role" disabled="disabled" value="{{role.name}}">
+			</div>	
+			
+			<div class="form-group">
+				<label forName="group" class="control-label" > Group </label>
+				<input class="form-control" name="group" disabled="disabled" value="{{group.name}}">
+			</div>	
+			<div class="form-group">
+				<label forName="associatedParticipant" class="control-label" > Associate Participant </label>
+				<input class="form-control" name="associatedParticipant" disabled="disabled" value="{{associatedParticipant.userName}}">
+			</div>			
+		{{/isView }}
+		{{#isCreate }}
+			<div class="form-group">
+				<label forName="password" class="control-label" > Password </label>
+				<input class="form-control" name="password" type="password">
+			</div>
+			<div class="form-group">
+				<label forName="firstName" class="control-label" > First Name </label>
+				<input class="form-control" name="firstName">
+			</div>
+			<div class="form-group">
+				<label forName="lastName" class="control-label" > Last Name </label>
+				<input class="form-control" name="lastName">
+			</div>
+			<div class="form-group">
+				<label forName="role" class="control-label" > Role </label>
+				<select class="form-control" name="role"></select>
+			</div>
+			<div class="form-group">
+				<label forName="group" class="control-label" > Group </label>
+				<select class="form-control" name="group"></select>							
+			</div>	
+			<div class="form-group">
+				<label forName="associatedParticipant" class="control-label" > Associate Participant </label>
+				<select class="form-control" name="associatedParticipant"></select>							
+			</div>
+			
+		{{/isCreate }}	
+		{{#isUpdate }}
+			<div class="form-group">
+				<label forName="password" class="control-label" > Password </label>
+				<input class="form-control" name="password" type="password" value="{{password}}">
+			</div>
+			<div class="form-group">
+				<label forName="firstName" class="control-label" > First Name </label>
+				<input class="form-control" name="firstName" value="{{firstName}}">
+			</div>
+			<div class="form-group">
+				<label forName="lastName" class="control-label" > Last Name </label>
+				<input class="form-control" name="lastName" value="{{lastName}}">
+			</div>
+			<div class="form-group">
+				<label forName="role" class="control-label" > Role </label>
+				<input class="form-control" name="role" disabled="disabled" value="{{role.name}}">
+			</div>
+			<div class="form-group">
+				<label forName="group" class="control-label" > Group </label>
+				<input class="form-control" name="group" disabled="disabled" value="{{group.name}}">
+			</div>	
+			<div class="form-group">
+				<label forName="associatedParticipant" class="control-label" > Associate Participant </label>
+				<input class="form-control" name="associatedParticipant" disabled="disabled" value="{{associatedParticipant.userName}}">
+			</div>	
+		{{/isUpdate }}		
+		{{#if isView }}
+			<div class="form-group">
+				<button class="btn btn-primary edit"> Edit </button>
+				<button class="btn btn-danger col-sm-offset-1 delete"> Delete </button>
+			</div>
+		{{else}}
+			<div class="form-group">
+				<button class="btn btn-primary save" type="submit"> Save </button>
+				<button class="btn btn-danger col-sm-offset-1 cancel"> Cancel </button>
+			</div>
+		{{/if}}
+		
+	</form>
+</div>

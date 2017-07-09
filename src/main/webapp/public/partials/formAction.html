@@ -1,0 +1,13 @@
+<script id="formAction" type="text/x-handlebars">
+	{{#if isView }}
+		<div class="form-group">
+			<button class="btn btn-primary edit"> Edit </button>
+			<button class="btn btn-danger col-sm-offset-1 delete"> Delete </button>
+		</div>
+	{{else}}
+		<div class="form-group">
+			<button class="btn btn-primary save" type="submit"> Save </button>
+			<button class="btn btn-danger col-sm-offset-1 cancel"> Cancel </button>
+		</div>
+	{{/if}}
+</script>

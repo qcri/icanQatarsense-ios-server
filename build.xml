@@ -1,0 +1,177 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one
+   or more contributor license agreements.  See the NOTICE file
+   distributed with this work for additional information
+   regarding copyright ownership.  The ASF licenses this file
+   to you under the Apache License, Version 2.0 (the
+   "License"); you may not use this file except in compliance
+   with the License.  You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing,
+   software distributed under the License is distributed on an
+   "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+   KIND, either express or implied.  See the License for the
+   specific language governing permissions and limitations
+   under the License.    
+-->
+<project name="qsense" default="compile" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<property environment="env"/>
+	<property name="ivy.install.version" value="2.0.0-beta1" />
+	<property name="ivy.jar.dir" value="${basedir}/ivy" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+
+	<property name="lib.dir" value="${basedir}/lib" />
+
+	<property name="build.dir" value="target" />
+	<property name="src.dir" value="src/main/java" />
+	<property name="test.dir" value="src/test/java" />
+	<property name="dist.dir" value="dist" />
+	<property name="tomcat.dir" value="" />
+	<property name="resources.dir" value="src/main/resources" />
+
+
+	<!-- paths used for compilation and run  -->
+	<path id="lib.path.id">
+		<fileset dir="${lib.dir}"/>
+	</path>	
+	<!-- ================================= 
+          target: resolve              
+         ================================= -->
+	<target name="resolve" description="--> resolve and retrieve dependencies with ivy">
+		<ivy:retrieve />
+	</target>
+
+	<!-- ================================= 
+          target: report              
+         ================================= -->
+	<target name="report" depends="resolve" description="--> generates a report of dependencies">
+		<ivy:report todir="${build.dir}"/>
+	</target>
+
+	<target name="compile" depends="resolve" description="compile the src classes" >
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="lib.path.id" includeAntRuntime="false" debug="true"/>
+		<copy todir="${build.dir}"> 
+			<fileset dir="${resources.dir}" includes="${env.PROFILE}.application.properties" />		                        			
+			 <mapper type="glob" from="*.application.properties" to="application.properties"/>			 
+		</copy> 
+		<copy todir="${build.dir}"> 
+            <fileset dir="${resources.dir}" includes="${env.PROFILE}.log4j.properties" />                                                        
+             <mapper type="glob" from="*.log4j.properties" to="log4j.properties"/>
+		</copy> 
+	</target>
+
+	<target name="compile-test" depends="compile" description="compile the test classes">
+		<javac srcdir="${test.dir}" destdir="${build.dir}" classpathref="lib.path.id" includeAntRuntime="false" debug="true"/>
+	</target>	
+	
+	<target name="test" depends="compile-test" >
+	  <junit failureProperty="test.failed">
+	    <classpath>
+	      <pathelement location="${build.dir}" />    
+	      <path refid = "lib.path.id" />	      
+	    </classpath>    
+	    <batchtest>
+	       <fileset dir="${test.dir}">
+	            <include name="**/*Test*" />
+	       </fileset>
+	    </batchtest>
+	    <formatter type="brief" usefile="false"/>
+	  </junit>
+	</target>  
+	<target name="war" depends="build">
+		<war destfile="dist/qsense.war" webxml="src/main/webapp/WEB-INF/web.xml">
+			<fileset dir="src/main/webapp" includes="**/*.html" />
+			<fileset dir="src/main/webapp" includes="**/*.mustache" />
+			<fileset dir="src/main/webapp" includes="**/*.css" />
+			<fileset dir="src/main/webapp" includes="**/*.sass" />
+			<fileset dir="src/main/webapp" includes="**/*.png" />
+			<fileset dir="src/main/webapp" includes="**/*.gif" />
+			<fileset dir="src/main/webapp" includes="**/*.js" />
+			<fileset dir="src/main/webapp" includes="**/*.jpg" />
+			<fileset dir="src/main/webapp" includes="**/*.jsp" />
+			<fileset dir="src/main/webapp" includes="**/*.ttf" />
+			<fileset dir="src/main/webapp" includes="**/*.woff" />
+			<fileset dir="src/main/webapp" includes="**/*.map" />
+			<lib dir="lib/" />			
+			<classes dir="${build.dir}" />
+			<classes dir="${resources.dir}" includes="*.xml" />
+			<classes dir="${resources.dir}" includes="**/*.sql" />
+			<fileset dir="${build.dir}" includes="*.properties">				
+			</fileset>
+		</war>
+	</target>
+	<target name="build" depends="clean , compile,test">
+
+	</target>
+
+
+
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+	<target name="clean" description="--> clean the project">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="${build.dir}" />
+			<fileset dir="${dist.dir}" />
+		</delete>
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+
+
+
+	<target name="Stop_Tomcat" description="Stopping tomcat">
+		<java classname="org.apache.catalina.startup.Bootstrap" fork="true">
+			<classpath>
+				<pathelement path="${env.TOMCAT_BIN}/bootstrap.jar"/>
+				<pathelement path="${env.TOMCAT_BIN}/tomcat-juli.jar"/>
+			</classpath>
+			<jvmarg value="-Dcatalina.home=${env.TOMCAT_HOME}"/>
+			<arg line="stop"/>
+		</java>
+	</target>
+
+	<target name="Start_Tomcat" description="Starting tomcat">
+		<java classname="org.apache.catalina.startup.Bootstrap" fork="true">
+			<classpath>
+				<pathelement path="${env.TOMCAT_BIN}/bootstrap.jar"/>
+				<pathelement path="${env.TOMCAT_BIN}/tomcat-juli.jar"/>
+			</classpath>
+			<jvmarg value="-Dcatalina.home=${env.TOMCAT_HOME}"/>
+			<jvmarg value="-Xdebug"/>
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,address=9001,server=y,suspend=n"/>
+			<jvmarg value="-XX:MaxPermSize=512M"/>
+		</java>
+	</target>
+
+	<target name="deploy" depends="Stop_Tomcat,war,copy_war,Start_Tomcat">
+		
+	</target>
+	
+	<target name="copy_war">
+		<copy todir="${env.TOMCAT_WEBAPPS}"  includeEmptyDirs="no" flatten="true">
+			<fileset file="${basedir}/dist/qsense.war"/>
+		</copy>
+	</target>
+
+	<target name="clean_deploy" depends="clean,clean_webapp,deploy">
+			
+	</target>
+	<target name="clean_webapp">
+		<delete dir="${env.TOMCAT_WEBAPPS}/qsense" />
+		<delete file="${env.TOMCAT_WEBAPPS}/qsense.war" />
+	</target>
+	
+	<target name="deploy_prod" depends="clean,clean_webapp,war,copy_war">			
+		<exec command="sudo service tomcat7 restart" >
+		
+		</exec>
+		<exec command="tail -1000f /usr/share/tomcat7/logs/qsense.log" >
+		
+		</exec>
+	</target>
+	
+</project>
